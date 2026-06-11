@@ -260,7 +260,7 @@ const Navbar = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo Section with Hover Animation */}
             <Link
-              to={user ? "/dashboard" : "/login"}
+              to="/"
               className="flex items-center gap-2 group focus:outline-none"
             >
               <motion.div
