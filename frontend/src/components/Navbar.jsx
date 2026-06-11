@@ -2,7 +2,21 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, LayoutDashboard, CheckSquare, Calendar, LogOut, LogIn, UserPlus, Sun, Moon, Timer, TrendingUp, User } from "lucide-react";
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  CheckSquare,
+  Calendar,
+  LogOut,
+  LogIn,
+  UserPlus,
+  Sun,
+  Moon,
+  Timer,
+  TrendingUp,
+  User,
+} from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import gsap from "gsap";
@@ -125,7 +139,9 @@ const Navbar = () => {
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   const handleConfirmLogout = (e) => {
@@ -187,17 +203,11 @@ const Navbar = () => {
     if (document.getElementById("theme-transition-overlay")) return;
 
     const { clientX, clientY } = e;
-    const isDark = theme === "dark";
-
-    // Background color of the TARGET theme
-    const targetColor = isDark ? "#ffffff" : "#0f172a";
-
     const overlay = document.createElement("div");
     overlay.id = "theme-transition-overlay";
 
     overlay.style.position = "fixed";
     overlay.style.borderRadius = "50%";
-    overlay.style.zIndex = "9999";dekho
     overlay.style.pointerEvents = "none";
 
     const size = 10;
@@ -286,7 +296,6 @@ const Navbar = () => {
                 DailyForge
               </span>
             </Link>
-
 
             {/* Desktop Navigation */}
             {user && (
@@ -434,7 +443,9 @@ const Navbar = () => {
                 <div
                   className={cn(
                     "flex flex-col gap-2",
-                    user ? "pt-4 mt-2 border-t border-[var(--border)]/30" : "pt-2",
+                    user
+                      ? "pt-4 mt-2 border-t border-[var(--border)]/30"
+                      : "pt-2",
                   )}
                 >
                   {!user ? (
@@ -460,7 +471,10 @@ const Navbar = () => {
                   ) : (
                     <>
                       {/* Mobile focus mode*/}
-                      <Link to="/focus-mode" className="btn btn-primary flex gap-2">
+                      <Link
+                        to="/focus-mode"
+                        className="btn btn-primary flex gap-2"
+                      >
                         <Timer size={16} />
                         Focus Mode
                       </Link>
