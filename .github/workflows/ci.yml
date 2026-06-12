@@ -2,13 +2,13 @@ name: CI Checks
 
 on:
   pull_request:
+    branches: ["main"]
   push:
+    branches: ["main"]
 
 jobs:
   backend:
-    name: Backend CI
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -24,18 +24,16 @@ jobs:
         working-directory: backend
         run: npm ci
 
-      - name: Run Backend Lint
+      - name: Lint Backend
         working-directory: backend
         run: npm run lint
 
-      - name: Run Backend Tests
+      - name: Backend Tests
         working-directory: backend
         run: npm test --if-present
 
   frontend:
-    name: Frontend CI
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -51,11 +49,11 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: Run Frontend Lint
+      - name: Lint Frontend
         working-directory: frontend
         run: npm run lint
 
-      - name: Run Frontend Tests
+      - name: Frontend Tests
         working-directory: frontend
         run: npm test --if-present
 
