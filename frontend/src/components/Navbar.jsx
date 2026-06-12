@@ -21,7 +21,6 @@ import gsap from "gsap";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import ThemeToggle from "./ThemeToggle";
-import dailyForgeLogo from "../assets/logo.png";
 
 // Utility for merging tailwind classes safely
 function cn(...inputs) {
@@ -202,10 +201,6 @@ const Navbar = () => {
     if (document.getElementById("theme-transition-overlay")) return;
 
     const { clientX, clientY } = e;
-    const isDark = theme === "dark";
-
-    // Background color of the TARGET theme
-    const targetColor = isDark ? "#ffffff" : "#0f172a";
 
     const overlay = document.createElement("div");
     overlay.id = "theme-transition-overlay";
