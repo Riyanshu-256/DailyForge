@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,6 +14,7 @@ import {
   Sun,
   Moon,
   TrendingUp,
+  Timer,
 } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
@@ -48,7 +49,7 @@ const LogoutModal = ({ isOpen, onConfirm, onCancel }) => (
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 16 }}
           transition={{ type: "spring", stiffness: 400, damping: 28 }}
-          className="bg-white dark:bg-slate-900 rounded-2xl border border-[#98e1d7]/30 dark:border-slate-700 p-8 w-full max-w-sm text-center shadow-xl"
+          className="bg-white dark:bg-slate-900 rounded-2xl border border-[var(--border)]/30 dark:border-slate-700 p-8 w-full max-w-sm text-center shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Icon */}
@@ -70,7 +71,7 @@ const LogoutModal = ({ isOpen, onConfirm, onCancel }) => (
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={onCancel}
-              className="flex-1 py-2.5 rounded-xl border border-[#98e1d7]/50 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="flex-1 py-2.5 rounded-xl border border-[var(--border)]/50 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
               Cancel
             </motion.button>
@@ -95,6 +96,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const menuRef = useRef(null);
+  const toggleRef = useRef(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   // Handle scroll effect for premium glassmorphism transition
@@ -115,6 +118,30 @@ const Navbar = () => {
   const handleLogoutClick = () => {
     setShowLogoutModal(true);
   };
+  // Close menu on outside click
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (e) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        toggleRef.current &&
+        !toggleRef.current.contains(e.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const handleConfirmLogout = (e) => {
     setShowLogoutModal(false);
@@ -175,7 +202,6 @@ const Navbar = () => {
     if (document.getElementById("theme-transition-overlay")) return;
 
     const { clientX, clientY } = e;
-    const isDark = theme === "dark";
 
     const overlay = document.createElement("div");
     overlay.id = "theme-transition-overlay";
@@ -184,10 +210,6 @@ const Navbar = () => {
     overlay.style.borderRadius = "50%";
     overlay.style.zIndex = "9999";
     overlay.style.pointerEvents = "none";
-
-    overlay.style.background = isDark
-      ? "radial-gradient(circle, #ffffff 0%, #98e1d7 100%)"
-      : "radial-gradient(circle, #98e1d7 0%, #4eb7b3 100%)";
 
     const size = 10;
 
@@ -218,11 +240,10 @@ const Navbar = () => {
         setTimeout(() => {
           gsap.to(overlay, {
             opacity: 0,
-            duration: 0.35,
-            ease: "power2.out",
+            duration: 0.3,
             onComplete: () => overlay.remove(),
           });
-        }, 80);
+        }, 50);
       },
     });
   };
@@ -252,8 +273,8 @@ const Navbar = () => {
         className={cn(
           "fixed top-0 inset-x-0 z-50 transition-all duration-300",
           scrolled
-            ? "bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-soft shadow-sm"
-            : "bg-white dark:bg-slate-900 border-b border-soft",
+            ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-soft shadow-sm"
+            : "bg-transparent border-b border-transparent",
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -310,7 +331,7 @@ const Navbar = () => {
                 whileHover={{ scale: 1.1, rotate: 15 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={handleThemeToggle}
-                className="p-2.5 rounded-xl border border-soft text-main hover:bg-[#d0f6e3]/30 dark:hover:bg-slate-800 transition-colors focus:outline-none cursor-pointer flex items-center justify-center mr-1"
+                className="p-2.5 rounded-xl border border-soft text-main hover:bg-[var(--bg)]/30 dark:hover:bg-slate-800 transition-colors focus:outline-none cursor-pointer flex items-center justify-center mr-1"
                 aria-label="Toggle dark mode"
               >
                 {theme === "dark" ? (
@@ -327,7 +348,7 @@ const Navbar = () => {
                 <>
                   <Link
                     to="/login"
-                    className="text-sm font-medium text-[#4eb7b3] hover:text-[#3b8ea0] dark:hover:text-white dark:hover:bg-gray-800 transition-colors px-4 py-2 rounded-xl hover:bg-[#d0f6e3]/50"
+                    className="text-sm font-medium text-primary hover:text-[var(--text-main)] dark:hover:text-white dark:hover:bg-gray-800 transition-colors px-4 py-2 rounded-xl hover:bg-[var(--bg)]/50"
                   >
                     Login
                   </Link>
@@ -339,13 +360,25 @@ const Navbar = () => {
                   </Link>
                 </>
               ) : (
-                <button
-                  onClick={handleLogoutClick}
-                  className="btn btn-primary text-sm flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
-                >
-                  <LogOut size={16} />
-                  Logout
-                </button>
+                <>
+                  {/*pomodoro focus mode*/}
+
+                  <Link
+                    to="/focus-mode"
+                    className="px-4 py-2 rounded-xl btn btn-primary flex items-center gap-2 text-sm font-bold"
+                  >
+                    <Timer size={16} />
+                    Focus Mode
+                  </Link>
+
+                  <button
+                    onClick={handleLogoutClick}
+                    className="btn btn-primary text-sm flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
+                  >
+                    <LogOut size={16} />
+                    Logout
+                  </button>
+                </>
               )}
             </div>
 
@@ -355,7 +388,7 @@ const Navbar = () => {
 
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 rounded-xl text-[#3b8ea0] dark:text-white hover:bg-[#d0f6e3] dark:hover:bg-gray-800 transition-colors focus:outline-none"
+                className="p-2 rounded-xl text-[var(--text-main)] dark:text-white hover:bg-[var(--bg)] dark:hover:bg-gray-800 transition-colors focus:outline-none"
                 aria-label="Toggle menu"
                 aria-expanded={isOpen}
                 aria-controls="mobile-navigation-menu"
