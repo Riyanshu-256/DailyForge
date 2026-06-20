@@ -1,22 +1,25 @@
-import { useContext, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import api from '../api/axios';
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
+import api from "../api/axios";
 
 const Profile = () => {
   // auth context
   const { user, setUser } = useContext(AuthContext);
 
   // states
-  const [name, setName] = useState(user?.name || '');
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [name, setName] = useState(user?.name || "");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   // update name handler
   const handleNameUpdate = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await api.patch('/auth/profile', {
+      const res = await api.patch("/auth/profile", {
         name,
       });
 
@@ -25,7 +28,7 @@ const Profile = () => {
 
       alert(res.data.message);
     } catch (error) {
-      alert(error.response?.data?.message || 'Failed to update name');
+      alert(error.response?.data?.message || "Failed to update name");
     }
   };
 
@@ -34,7 +37,7 @@ const Profile = () => {
     e.preventDefault();
 
     try {
-      const res = await api.patch('/auth/profile', {
+      const res = await api.patch("/auth/profile", {
         currentPassword,
         newPassword,
       });
@@ -42,10 +45,42 @@ const Profile = () => {
       alert(res.data.message);
 
       // clear password fields
-      setCurrentPassword('');
-      setNewPassword('');
+      setCurrentPassword("");
+      setNewPassword("");
     } catch (error) {
-      alert(error.response?.data?.message || 'Failed to update password');
+      alert(error.response?.data?.message || "Failed to update password");
+    }
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    setSelectedImage(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      setUploading(true);
+
+      const res = await api.post("/auth/upload-profile-image", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setUser((prev) => ({
+        ...prev,
+        profileImage: res.data.profileImage,
+      }));
+
+      alert("Profile image updated successfully");
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to upload image");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -64,17 +99,44 @@ const Profile = () => {
 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="flex items-center gap-5">
-            <div
-              className="
-        w-20 h-20 rounded-full
-        bg-gradient-to-tr
-        from-[#4eb7b3]
-        to-[#98e1d7]
-        flex items-center justify-center
-        text-white text-3xl font-bold
-      "
-            >
-              {user?.name?.charAt(0).toUpperCase()}
+            <div className="relative">
+              <img
+                src={
+                  selectedImage ||
+                  user?.profileImage ||
+                  `https://ui-avatars.com/api/?name=${user?.name}`
+                }
+                alt="Profile"
+                className="
+      w-20 h-20
+      rounded-full
+      object-cover
+      border-2 border-[#4eb7b3]
+    "
+              />
+
+              <label
+                className="
+      absolute
+      -bottom-1
+      -right-1
+      bg-[#4eb7b3]
+      text-white
+      text-xs
+      px-2 py-1
+      rounded-full
+      cursor-pointer
+    "
+              >
+                {uploading ? "..." : "Edit"}
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
+              </label>
             </div>
 
             <div>
