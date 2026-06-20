@@ -7,8 +7,7 @@ import { verifyFirebaseIdToken } from "../utils/firebaseAuth.js";
 import crypto from "crypto";
 import cloudinary from "../config/cloudinary.js";
 import streamifier from "streamifier";
-import { generateRecurringTasks } from '../utils/generateRecurringTasks.js';
-import { v2 as cloudinary } from "cloudinary";
+import { generateRecurringTasks } from "../utils/generateRecurringTasks.js";
 import multer from "multer";
 import dotenv from "dotenv";
 dotenv.config();
@@ -21,7 +20,6 @@ cloudinary.config({
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET,
 });
-
 
 if (!ENCRYPTION_KEY || Buffer.from(ENCRYPTION_KEY, "hex").length !== 32) {
   throw new Error("TWO_FACTOR_ENCRYPTION_KEY must be a 32-byte hex key");
@@ -122,6 +120,7 @@ export const signup = async (req, res) => {
       .json({
         message: "User registered successfully",
         user: { _id: newUser._id, name: newUser.name, email: newUser.email },
+        // eslint-disable-next-line no-dupe-keys
         user: {
           _id: newUser._id,
           name: newUser.name,
@@ -174,7 +173,7 @@ export const login = async (req, res) => {
     });
     // fire-and-forget — does NOT block login response
     generateRecurringTasks(user._id).catch((err) =>
-      console.error("[RecurringTasks] generation error:", err)
+      console.error("[RecurringTasks] generation error:", err),
     );
     return res
       .status(200)
@@ -182,6 +181,7 @@ export const login = async (req, res) => {
       .json({
         message: "Login successful",
         user: { _id: user._id, name: user.name, email: user.email },
+        // eslint-disable-next-line no-dupe-keys
         user: {
           _id: user._id,
           name: user.name,
@@ -236,6 +236,7 @@ export const loginWith2FA = async (req, res) => {
       .json({
         message: "Login successful",
         user: { _id: user._id, name: user.name, email: user.email },
+        // eslint-disable-next-line no-dupe-keys
         user: {
           _id: user._id,
           name: user.name,
@@ -547,6 +548,7 @@ export const googleLogin = async (req, res) => {
       .json({
         message: "Google sign-in successful",
         user: { _id: user._id, name: user.name, email: user.email },
+        // eslint-disable-next-line no-dupe-keys
         user: {
           _id: user._id,
           name: user.name,
@@ -562,48 +564,7 @@ export const googleLogin = async (req, res) => {
   }
 };
 
-export const uploadProfileImage = async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded or file exceeds size limit" });
-    }
-
-    const fileBase64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
-
-    const cloudinaryResponse = await cloudinary.uploader.upload(fileBase64, {
-      folder: "profile_pictures",
-      transformation: [
-        { width: 400, height: 400, crop: "fill", gravity: "face" }, 
-        { quality: "auto" },
-        { fetch_format: "auto" }, 
-      ],
-    });
-
-    const secureUrl = cloudinaryResponse.secure_url;
-
-    const updatedUser = await User.findByIdAndUpdate(
-      req.userId, 
-      { photo: secureUrl },
-      { new: true } 
-    ).select("-password");
-
-    if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    return res.status(200).json({ 
-      message: "Profile image updated successfully", 
-      imageUrl: secureUrl,
-      user: updatedUser 
-    });
-
-  } catch (error) {
-    console.error("Cloudinary upload error:", error);
-    return res.status(500).json({ error: "Internal server error during upload" });
-  }
-};
-
 export const uploadMiddleware = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 3 * 1024 * 1024 },
-}).single("profileImage"); 
+}).single("profileImage");
