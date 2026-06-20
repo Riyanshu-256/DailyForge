@@ -16,11 +16,14 @@ import NotFound from "./pages/NotFound.jsx";
 import About from "./pages/About.jsx";
 import Profile from "./pages/Profile.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import Pomodoro from "./pages/Pomodoro.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import PageTransition from "./components/PageTransition.jsx";
+import ShareRoutine from "./pages/ShareRoutine.jsx";
+import DailyJournal from "./pages/DailyJournal.jsx";
 
 const AuthLayout = ({ children }) => (
-  <div className="min-h-[calc(100vh-3.75rem)] flex items-center justify-center px-4">
+  <div className="min-h-[calc(100vh-3.75rem)] flex items-center justify-center">
     {children}
   </div>
 );
@@ -36,6 +39,9 @@ const AnimatedRoutes = () => {
           element={
             <PublicRoute>
               <LandingPage />
+              <AuthLayout>
+                <Login />
+              </AuthLayout>
             </PublicRoute>
           }
         />
@@ -123,8 +129,35 @@ const AnimatedRoutes = () => {
             </ProtectedRoutes>
           }
         />
+        <Route
+          path="/daily-journal"
+          element={
+            <ProtectedRoutes>
+              <ErrorBoundary>
+                <PageTransition><DailyJournal /></PageTransition>
+              </ErrorBoundary>
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/forge"
+          element={
+            <ProtectedRoutes>
+              <PageTransition><ForgeMode /></PageTransition>
+            </ProtectedRoutes>
+          }
+        />
+        <Route
+          path="/focus"
+          element={
+            <ProtectedRoutes>
+              <PageTransition><ForgeMode /></PageTransition>
+            </ProtectedRoutes>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
+
     </AnimatePresence>
   );
 };
@@ -133,13 +166,16 @@ const App = () => {
   return (
     <BrowserRouter>
       <Navbar />
-      <main className="app-bg min-h-screen pt-15 flex flex-col text-main transition-colors duration-300">
+      <main className="app-bg min-h-screen pt-24 sm:pt-28 flex flex-col text-main transition-colors duration-300">
         <Routes>
           <Route
             path="/"
             element={
               <PublicRoute>
                 <LandingPage />
+                <AuthLayout>
+                  <Login />
+                </AuthLayout>
               </PublicRoute>
             }
           />
@@ -196,6 +232,14 @@ const App = () => {
             }
           />
           <Route
+            path="/focus-mode"
+            element={
+              <ProtectedRoutes>
+                <Pomodoro />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
             path="/profile"
             element={
               <ProtectedRoutes>
@@ -211,6 +255,15 @@ const App = () => {
               </ProtectedRoutes>
             }
           />
+          <Route
+            path="/daily-journal"
+            element={
+              <ProtectedRoutes>
+                <DailyJournal />
+              </ProtectedRoutes>
+            }
+          />
+          <Route path="/share/routine/:id" element={<ShareRoutine />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
