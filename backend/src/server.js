@@ -10,12 +10,13 @@ import { routineRouter } from "../routes/routineRoutes.js";
 import { analyticsRouter } from "../routes/analyticsRoutes.js";
 
 // dotenv config
-dotenv.config({ path: path.resolve(import.meta.dirname, "../.env") });
+dotenv.config({
+  path: path.resolve(process.cwd(), ".env"),
+});
 const PORT = process.env.PORT;
 
-// Initialize express     
+// Initialize express
 const app = express();
-
 
 app.use(
   cors({
@@ -24,9 +25,9 @@ app.use(
       "http://localhost:5173",
       "http://127.0.0.1:5173",
       process.env.CLIENT_ORIGIN,
-    ].filter(Boolean), 
+    ].filter(Boolean),
     credentials: true,
-  })
+  }),
 );
 // Connect to MongoDB using mongoose
 connectDB();

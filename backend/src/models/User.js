@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+    },
+    profileImage: {
+      type: String, 
+      default: "",
     },
 
     // ─── Two-Factor Authentication ──────────────────────────────────────────
@@ -41,9 +45,9 @@ const userSchema = new mongoose.Schema(
     },
     // ────────────────────────────────────────────────────────────────────────
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 export default User;
