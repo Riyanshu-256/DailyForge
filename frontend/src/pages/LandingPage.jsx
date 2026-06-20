@@ -2,13 +2,13 @@ import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f7fffd] to-[#e8faf5] dark:from-slate-950 dark:to-slate-900 text-slate-900 dark:text-white overflow-hidden">
+    <div className="min-h-screen bg-linear-to-b from-[#f7fffd] to-[#e8faf5] dark:from-slate-950 dark:to-slate-900 text-slate-900 dark:text-white overflow-hidden">
       {/* Hero */}
       <section className="relative flex flex-col items-center justify-center text-center px-6 py-32">
         <div className="absolute top-0 left-0 w-96 h-96 bg-[#4eb7b3]/25 blur-3xl rounded-full" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#98e1d7]/25 blur-3xl rounded-full" />
 
-        <h1 className="text-6xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-[#3b8ea0] via-[#4eb7b3] to-[#98e1d7] bg-clip-text text-transparent py-2">
+        <h1 className="text-6xl md:text-7xl font-extrabold mb-6 bg-linear-to-r from-[#3b8ea0] via-[#4eb7b3] to-[#98e1d7] bg-clip-text text-transparent py-2">
           DailyForge
         </h1>
 
@@ -25,7 +25,7 @@ const LandingPage = () => {
         <div className="flex flex-wrap gap-4 justify-center">
           <Link
             to="/signup"
-            className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#3b8ea0] to-[#4eb7b3] text-white font-semibold shadow-lg hover:scale-105 transition-all duration-300"
+            className="px-8 py-4 rounded-xl bg-linear-to-r from-[#3b8ea0] to-[#4eb7b3] text-white font-semibold shadow-lg hover:scale-105 transition-all duration-300"
           >
             Get Started
           </Link>
@@ -152,7 +152,7 @@ const LandingPage = () => {
 
         <Link
           to="/signup"
-          className="px-10 py-4 rounded-xl bg-gradient-to-r from-[#3b8ea0] to-[#4eb7b3] text-white font-semibold shadow-lg hover:scale-105 transition-all duration-300"
+          className="px-10 py-4 rounded-xl bg-linear-to-r from-[#3b8ea0] to-[#4eb7b3] text-white font-semibold shadow-lg hover:scale-105 transition-all duration-300"
         >
           Create Free Account
         </Link>

@@ -15,6 +15,10 @@ import {
   googleLogin,
 } from "../controllers/authController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
+  uploadProfileImage,
+  uploadMiddleware
+} from '../controllers/authController.js';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -40,6 +44,11 @@ router.post("/signup", signup);
 
 // Login with email/password
 router.post("/login", login);
+// Protected routes (require valid JWT)
+router.get('/me', authMiddleware, getUser);
+router.put('/update-profile', authMiddleware, updateProfile);
+router.post("/upload-profile", authMiddleware, uploadMiddleware, uploadProfileImage);
+router.post('/logout', authMiddleware, logout);
 
 // Login/Register using Google OAuth
 router.post("/google-login", googleLogin);
