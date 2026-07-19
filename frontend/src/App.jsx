@@ -21,6 +21,7 @@ import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import PageTransition from "./components/PageTransition.jsx";
 import ShareRoutine from "./pages/ShareRoutine.jsx";
 import DailyJournal from "./pages/DailyJournal.jsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 
 const AuthLayout = ({ children }) => (
   <div className="min-h-[calc(100vh-3.75rem)] flex items-center justify-center">
@@ -37,12 +38,7 @@ const AnimatedRoutes = () => {
         <Route
           path="/"
           element={
-            <PublicRoute>
-              <LandingPage />
-              <AuthLayout>
-                <Login />
-              </AuthLayout>
-            </PublicRoute>
+            <LandingPage />
           }
         />
         <Route
@@ -155,6 +151,16 @@ const AnimatedRoutes = () => {
             </ProtectedRoutes>
           }
         />
+        <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <AuthLayout>
+                  <ResetPasswordPage />
+                </AuthLayout>
+              </PublicRoute>
+            }
+          />
         <Route path="*" element={<NotFound />} />
       </Routes>
 
@@ -171,12 +177,7 @@ const App = () => {
           <Route
             path="/"
             element={
-              <PublicRoute>
-                <LandingPage />
-                <AuthLayout>
-                  <Login />
-                </AuthLayout>
-              </PublicRoute>
+              <LandingPage />
             }
           />
           <Route
@@ -261,6 +262,16 @@ const App = () => {
               <ProtectedRoutes>
                 <DailyJournal />
               </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <AuthLayout>
+                  <ResetPasswordPage />
+                </AuthLayout>
+              </PublicRoute>
             }
           />
           <Route path="/share/routine/:id" element={<ShareRoutine />} />
