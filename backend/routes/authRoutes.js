@@ -1,6 +1,6 @@
 import express from "express";
-import upload from "../middlewares/uploadMiddleware.js";
 import rateLimit from "express-rate-limit";
+import upload from "../middlewares/uploadMiddleware.js";
 
 import {
   signup,
@@ -14,16 +14,11 @@ import {
   uploadProfileImage,
   logout,
   googleLogin,
+  forgotPasswordRequest,
+  resetPassword,
 } from "../controllers/authController.js";
 
 import { authMiddleware } from "../middlewares/authMiddleware.js";
-  googleLogin, 
-  resetPassword,
-  forgotPasswordRequest,
-  uploadProfileImage,
-  uploadMiddleware
-} from '../controllers/authController.js';
-import { authMiddleware } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -38,39 +33,64 @@ const twoFALimiter = rateLimit({
 
 // Rate limiter for forgot password requests
 const forgotPasswordLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // Max 3 requests per 15 minutes per IP
+  windowMs: 15 * 60 * 1000,
+  max: 10,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { message: 'Too many password reset requests from this IP, please try again after 15 minutes.' },
+  message: {
+    message:
+      "Too many password reset requests from this IP, please try again after 15 minutes.",
+  },
 });
 
-// Rate limiter for password reset attempts (using a token)
+// Rate limiter for password reset attempts
 const resetPasswordLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Max 5 attempts per 15 minutes per IP
+  windowMs: 15 * 60 * 1000,
+  max: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { message: 'Too many password reset attempts from this IP, please try again after 15 minutes.' },
+  message: {
+    message:
+      "Too many password reset attempts from this IP, please try again after 15 minutes.",
+  },
 });
-// Public routes
-router.post('/signup', signup);
-router.post('/login', login);
-router.post('/google-login', googleLogin);
+
+// Public Routes
+router.post("/signup", signup);
+router.post("/login", login);
+router.post("/google-login", googleLogin);
+router.post("/login-2fa", twoFALimiter, loginWith2FA);
+
+// Protected Routes
+router.get("/user", authMiddleware, getUser);
+
+router.put("/update-profile", authMiddleware, updateProfile);
+
+router.post(
+  "/upload-profile-picture",
+  authMiddleware,
+  upload.single("image"),
+  uploadProfileImage
+);
+
+router.post("/logout", authMiddleware, logout);
 
 // Two-Factor Authentication Routes
 router.post("/setup-2fa", authMiddleware, twoFALimiter, setup2FA);
-
-// Protected routes (require valid JWT)
-router.get('/me', authMiddleware, getUser);
-router.put('/update-profile', authMiddleware, updateProfile);
-router.post("/upload-profile-picture", authMiddleware, uploadMiddleware, uploadProfileImage);
-router.post('/logout', authMiddleware, logout);
-
+router.post("/verify-2fa", authMiddleware, twoFALimiter, verify2FA);
 router.post("/disable-2fa", authMiddleware, twoFALimiter, disable2FA);
 
 // Forgot Password Routes
-router.post('/forgot-password', forgotPasswordLimiter, forgotPasswordRequest); // Request reset link
-router.post('/reset-password', resetPasswordLimiter, resetPassword); // Use reset link to set new password
+router.post(
+  "/forgot-password",
+  forgotPasswordLimiter,
+  forgotPasswordRequest
+);
+
+router.post(
+  "/reset-password",
+  resetPasswordLimiter,
+  resetPassword
+);
 
 export { router as authRouter };
