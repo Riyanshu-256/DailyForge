@@ -1,8 +1,17 @@
 import OnboardingModal from "../components/OnboardingModal";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext"; 
-import { CheckCircle2, Calendar, Flame, ArrowRight, RotateCw, Copy, BookOpen, Upload } from "lucide-react";
+import { AuthContext } from "../context/AuthContext";
+import {
+  CheckCircle2,
+  Calendar,
+  Flame,
+  ArrowRight,
+  RotateCw,
+  Copy,
+  BookOpen,
+  Upload,
+} from "lucide-react";
 import LiveClock from "../components/Dashboard/LiveClock";
 import StatCard from "../components/Dashboard/StatCard";
 import TaskPreview from "../components/Dashboard/TaskPreview";
@@ -211,57 +220,66 @@ export default function Dashboard() {
     <div className="min-h-screen w-full max-w-[1440px] mx-auto app-bg px-6 py-8 space-y-8 animate-in">
       <OnboardingModal />
 
-        {/* Get Started */}
-        <section className="w-full animate-in delay-75">
-    <div className="card p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/70 dark:bg-slate-900/60 shadow-sm">
-       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-         <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-2">
+      {/* Get Started */}
+      <section className="w-full animate-in delay-75">
+        <div className="card p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/70 dark:bg-slate-900/60 shadow-sm">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-2">
                 Getting Started
-            </p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-main">
-               New here? Learn DailyForge in a few quick steps.
-            </h2>
-            <p className="mt-3 text-muted leading-relaxed">
-              DailyForge helps you plan tasks, build routines, and track your progress in one place.
-              Start with one task, set its priority, and use the dashboard to stay consistent.
-           </p>
+              </p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-main">
+                New here? Learn DailyForge in a few quick steps.
+              </h2>
+              <p className="mt-3 text-muted leading-relaxed">
+                DailyForge helps you plan tasks, build routines, and track your
+                progress in one place. Start with one task, set its priority,
+                and use the dashboard to stay consistent.
+              </p>
+            </div>
+
+            <button
+              onClick={() => navigate("/tasks")}
+              className="px-5 py-3 rounded-xl bg-primary text-white font-semibold hover:opacity-90 transition"
+            >
+              Create your first task
+            </button>
           </div>
 
-      <button
-        onClick={() => navigate("/tasks")}
-        className="px-5 py-3 rounded-xl bg-primary text-white font-semibold hover:opacity-90 transition"
-      >
-        Create your first task
-      </button>
-    </div>
-
-    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-      {[
-        { title: "Add a task", desc: "Write down what you need to do." },
-        { title: "Set priority", desc: "Mark what matters most first." },
-        { title: "Build routine", desc: "Drag tasks into your weekly flow." },
-        { title: "Track progress", desc: "See streaks and analytics over time." },
-      ].map((item) => (
-        <div
-          key={item.title}
-          className="rounded-2xl bg-white/60 dark:bg-slate-800/60 p-4 border border-white/10"
-        >
-          <h3 className="text-main font-semibold">{item.title}</h3>
-          <p className="text-sm text-muted mt-1 leading-relaxed">{item.desc}</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+            {[
+              { title: "Add a task", desc: "Write down what you need to do." },
+              { title: "Set priority", desc: "Mark what matters most first." },
+              {
+                title: "Build routine",
+                desc: "Drag tasks into your weekly flow.",
+              },
+              {
+                title: "Track progress",
+                desc: "See streaks and analytics over time.",
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl bg-white/60 dark:bg-slate-800/60 p-4 border border-white/10"
+              >
+                <h3 className="text-main font-semibold">{item.title}</h3>
+                <p className="text-sm text-muted mt-1 leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+            <h3 className="text-lg font-semibold text-main whitespace-nowrap">
+              Want to know more about DailyForge and about its features?
+              <a href="/About" className="text-primary hover:text-primary/80">
+                About us
+              </a>
+            </h3>
+          </div>
         </div>
-      ))}
-      <h3 className="text-lg font-semibold text-main whitespace-nowrap">
-        Want to know more about DailyForge and about its features?
-        <a href="/About" className="text-primary hover:text-primary/80">
-          About us
-        </a>
-      </h3>
-    </div>
-  </div>
-</section>
+      </section>
       {/* Header */}
-      <header className="animate-in flex flex-col lg:flex-row items-center p-6 shadow-md rounded-xl bg-[var(--surface)] gap-6">
+      <header className="animate-in flex flex-col lg:flex-row items-center p-6 shadow-md rounded-xl bg-(--surface) gap-6">
         {moreTags ? (
           <div className="flex align-middle">
             <div
@@ -302,7 +320,7 @@ export default function Dashboard() {
             {/* Left */}
             <div className="flex-1">
               <div
-                className="relative w-20 h-20 rounded-full overflow-hidden bg-gradient-to-tr from-[#4eb7b3] to-[#98e1d7] flex items-center justify-center text-white text-3xl font-bold flex-shrink-0 group cursor-pointer"
+                className="relative w-20 h-20 rounded-full overflow-hidden bg-linear-to-tr from-[#4eb7b3] to-[#98e1d7] flex items-center justify-center text-white text-3xl font-bold shrink-0 group cursor-pointer"
                 onClick={() => setShowProfilePictureModal(true)}
               >
                 {user?.photo ? (
@@ -503,16 +521,28 @@ export default function Dashboard() {
                   <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-2">
                       <BookOpen size={20} className="text-primary" />
-                      <h2 className="text-lg font-semibold text-main text-left">Daily Journal</h2>
+                      <h2 className="text-lg font-semibold text-main text-left">
+                        Daily Journal
+                      </h2>
                     </div>
                     {todayJournal && (
-                      <span className="text-2xl" title={`Mood: ${todayJournal.mood}`}>
-                        {todayJournal.mood === "happy" ? "😃" :
-                          todayJournal.mood === "calm" ? "😌" :
-                            todayJournal.mood === "neutral" ? "😐" :
-                              todayJournal.mood === "stressed" ? "🤯" :
-                                todayJournal.mood === "sad" ? "😢" :
-                                  todayJournal.mood === "energetic" ? "⚡" : "😴"}
+                      <span
+                        className="text-2xl"
+                        title={`Mood: ${todayJournal.mood}`}
+                      >
+                        {todayJournal.mood === "happy"
+                          ? "😃"
+                          : todayJournal.mood === "calm"
+                            ? "😌"
+                            : todayJournal.mood === "neutral"
+                              ? "😐"
+                              : todayJournal.mood === "stressed"
+                                ? "🤯"
+                                : todayJournal.mood === "sad"
+                                  ? "😢"
+                                  : todayJournal.mood === "energetic"
+                                    ? "⚡"
+                                    : "😴"}
                       </span>
                     )}
                   </div>
@@ -542,7 +572,9 @@ export default function Dashboard() {
                   ) : (
                     <div className="space-y-3 mt-4 text-left">
                       <p className="text-xs text-muted leading-relaxed">
-                        No journal entry logged for today yet. Write down your wins, challenges, and learnings to keep track of your progress.
+                        No journal entry logged for today yet. Write down your
+                        wins, challenges, and learnings to keep track of your
+                        progress.
                       </p>
                     </div>
                   )}
@@ -554,7 +586,9 @@ export default function Dashboard() {
                     className="group flex gap-2 w-full justify-center items-center px-4 py-2 rounded-lg bg-(--primary) text-white text-sm font-medium hover:opacity-85 active:scale-95 transition-all duration-150 cursor-pointer"
                     onClick={() => navigate("/daily-journal")}
                   >
-                    {todayJournal ? "Edit Today's Journal" : "Write Today's Entry"}
+                    {todayJournal
+                      ? "Edit Today's Journal"
+                      : "Write Today's Entry"}
                     <ArrowRight className="transition-transform duration-150 group-hover:translate-x-1" />
                   </button>
                 </div>
