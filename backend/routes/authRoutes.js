@@ -61,7 +61,11 @@ router.post('/google-login', googleLogin);
 // Two-Factor Authentication Routes
 router.post("/setup-2fa", authMiddleware, twoFALimiter, setup2FA);
 
-router.post("/verify-2fa", authMiddleware, twoFALimiter, verify2FA);
+// Protected routes (require valid JWT)
+router.get('/me', authMiddleware, getUser);
+router.put('/update-profile', authMiddleware, updateProfile);
+router.post("/upload-profile-picture", authMiddleware, uploadMiddleware, uploadProfileImage);
+router.post('/logout', authMiddleware, logout);
 
 router.post("/disable-2fa", authMiddleware, twoFALimiter, disable2FA);
 
